@@ -4,6 +4,7 @@ import FacebookProvider from "next-auth/providers/facebook"
 import GithubProvider from "next-auth/providers/github"
 import TwitterProvider from "next-auth/providers/twitter"
 import Auth0Provider from "next-auth/providers/auth0"
+import CognitoProvider from "next-auth/providers/cognito"
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -32,6 +33,11 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.TWITTER_SECRET,
       version: "2.0",
     }),
+    CognitoProvider({
+      clientId: process.env.COGNITO_CLIENT_ID,
+      clientSecret: process.env.COGNITO_CLIENT_SECRET,
+      issuer: process.env.COGNITO_ISSUER,
+    }),
   ],
   callbacks: {
     async jwt({ token }) {
@@ -41,4 +47,6 @@ export const authOptions: NextAuthOptions = {
   },
 }
 
-export default NextAuth(authOptions)
+const handler = NextAuth(authOptions)
+
+export { handler as GET, handler as POST }
